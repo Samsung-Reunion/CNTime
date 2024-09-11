@@ -1,5 +1,5 @@
 ---
-name: ✅Feature
+name: ✅ Feature
 about: 새로운 기능 개발🔥
 title: ''
 labels: ''

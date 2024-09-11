@@ -1,5 +1,5 @@
 ---
-name: ✅Refactor
+name: ✅ Refactor
 about: 기존 기능 수정🔥
 title: ''
 labels: ''

@@ -1,5 +1,5 @@
 ---
-name: ✅Hotfix
+name: ✅ Hotfix
 about: 긴급 수정. 즉시 반영🔥
 title: ''
 labels: ''

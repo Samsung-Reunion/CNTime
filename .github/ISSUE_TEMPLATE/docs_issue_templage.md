@@ -1,5 +1,5 @@
 ---
-name: ✅Docs
+name: ✅ Docs
 about: 문서 작업🔥
 title: ''
 labels: ''

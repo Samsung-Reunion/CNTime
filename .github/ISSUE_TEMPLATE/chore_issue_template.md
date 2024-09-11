@@ -1,5 +1,5 @@
 ---
-name: ✅Chore
+name: ✅ Chore
 about: 기타 잡일🔥
 title: ''
 labels: ''
