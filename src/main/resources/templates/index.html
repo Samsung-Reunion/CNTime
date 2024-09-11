@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visitor Log</title>
+</head>
+<body>
+<h1>로그를 남기려면 새로고침...</h1>
+
+<div>
+    <h2>Visit History</h2>
+    <ul id="logs">
+        <!-- 초기 페이지 로드 시, 타임리프를 통해 서버에서 전달된 로그를 표시 -->
+        <li th:each="log : ${logs}">
+            <span th:text="${log.name}"></span> visited at
+            <span th:text="${log.time}"></span>
+        </li>
+    </ul>
+</div>
+
+<script defer>
+    // JavaScript 코드를 body 끝부분에 두어 실행 순서를 명확히 함
+    document.addEventListener('DOMContentLoaded', function() {
+        var name = prompt("Please enter your name:");
+
+        if (name !== null && name.trim() !== "") {
+            fetch('/visitor/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    'name': name
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    updateLogs(data.data);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    });
+
+    function updateLogs(logs) {
+        const logsContainer = document.getElementById('logs');
+        logsContainer.innerHTML = ''; // 기존 로그 초기화
+
+        logs.forEach(log => {
+            const logElement = document.createElement('li');
+            logElement.textContent = `${log.name} visited at ${log.time}`;
+            logsContainer.appendChild(logElement);
+        });
+    }
+</script>
+</body>
+</html>
