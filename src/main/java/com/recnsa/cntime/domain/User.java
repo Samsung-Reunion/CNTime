@@ -20,7 +20,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID userId;
 
-    @Column(length = 50, nullable = false)
+    @Column(length = 50)
     private String name;
 
     @Column(length = 50, nullable = false, unique = true)
@@ -35,4 +35,9 @@ public class User {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Member member;
+
+    public String changeUserName(String newName) {
+        this.name = newName;
+        return this.name;
+    }
 }
