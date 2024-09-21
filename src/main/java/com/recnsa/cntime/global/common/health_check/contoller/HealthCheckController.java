@@ -16,7 +16,6 @@ import java.util.List;
 
 @Controller
 @AllArgsConstructor
-
 public class HealthCheckController {
     private final HealthCheckService healthCheckService;
 
