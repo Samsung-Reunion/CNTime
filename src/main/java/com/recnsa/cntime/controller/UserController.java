@@ -16,7 +16,7 @@ public class UserController {
 
     @PutMapping("/name")
     public ResponseEntity<SuccessResponse<?>> changeUserName(@RequestHeader("Authorization") String jwtToken, @RequestBody UserNameDTO userNameDTO) {
-        String userName = userService.changeUserName(jwtToken, userNameDTO);
+        UserNameDTO userName = userService.changeUserName(jwtToken, userNameDTO);
 
         return SuccessResponse.ok(userName);
     }

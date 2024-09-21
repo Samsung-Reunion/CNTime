@@ -25,7 +25,7 @@ public class UserService {
     private String secretKey;
 
     private final UserRepository userRepository;
-    public String changeUserName(String jwtToken, UserNameDTO userNameDTO) {
+    public UserNameDTO changeUserName(String jwtToken, UserNameDTO userNameDTO) {
         SecretKey secretKeyObject = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
 
         System.out.println(jwtToken);
@@ -44,6 +44,7 @@ public class UserService {
         User user = safeUser.get();
         user.changeUserName(userNameDTO.getUserName());
 
-        return userRepository.save(user).getName();
+        String addUserName = userRepository.save(user).getName();
+        return new UserNameDTO(addUserName);
     }
 }
