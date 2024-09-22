@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Timer Dashboard</title>
+    <script src="/webjars/sockjs-client/1.1.2/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+<h1>Timer Dashboard</h1>
+
+<!-- 유저 이름 입력 -->
+<div>
+    <label for="username">Enter your name: </label>
+    <input type="text" id="username" placeholder="Enter your name" required>
+    <!-- Start Timer 버튼에 id="startBtn" 추가 -->
+    <button id="startBtn" onclick="startTimer()">Start Timer</button>
+</div>
+
+<div id="timers">
+    <!-- 타이머 정보가 여기 표시됩니다 -->
+</div>
+
+<script>
+    var stompClient = null;
+    var currentTime = 0;  // 초기 타이머 값
+
+    function connect() {
+        var socket = new SockJS('/enter');  // WebSocket 엔드포인트
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function(frame) {
+            console.log('Connected: ' + frame);
+
+            // 타이머 정보를 구독
+            stompClient.subscribe('/topic/member/passedTime', function(messageOutput) {
+                showTimer(JSON.parse(messageOutput.body));
+            });
+        });
+    }
+
+    function sendTimerInfo(userId, time) {
+        // 클라이언트가 타이머 정보를 서버로 전송
+        stompClient.send("/socket/timer/passedTime", {}, JSON.stringify({ userId: userId, time: time }));
+    }
+
+    function showTimer(message) {
+        var timersDiv = document.getElementById("timers");
+        var timerElement = document.createElement('div');
+        timerElement.appendChild(document.createTextNode("User: " + message.userId + " - Time: " + message.time + " seconds"));
+        timersDiv.appendChild(timerElement);
+    }
+
+    // 타이머 시작 버튼 클릭 시 호출되는 함수
+    function startTimer() {
+        var userName = document.getElementById('username').value;  // 입력된 유저 이름
+        if (!userName) {
+            alert("Please enter a name.");
+            return;
+        }
+
+        // WebSocket 연결을 이미 설정했다면 다시 연결하지 않음
+        if (stompClient === null) {
+            connect();  // WebSocket 연결
+        }
+
+        // 버튼을 누를 때마다 시간을 증가시킴
+        document.getElementById('username').disabled = true;  // 이름 변경 금지
+        document.getElementById('startBtn').disabled = true;  // 타이머 시작 버튼 비활성화
+        document.getElementById('incrementBtn').disabled = false;  // 시간 증가 버튼 활성화
+    }
+
+    // 버튼을 누를 때마다 타이머 값을 1 증가시키고 서버로 전송
+    function incrementTimer() {
+        var userName = document.getElementById('username').value;  // 입력된 유저 이름
+        currentTime += 1;  // 타이머 값을 1 증가
+        sendTimerInfo(userName, currentTime);  // 증가된 값을 서버로 전송
+    }
+
+    window.onload = function() {
+        // 페이지 로드 시 WebSocket을 연결해 둠
+        connect();
+    }
+</script>
+
+<!-- 타이머 값을 1 증가시키는 버튼 -->
+<button id="incrementBtn" onclick="incrementTimer()" disabled>Increment Time</button>
+</body>
+</html>

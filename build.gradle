@@ -44,6 +44,9 @@ dependencies {
 	// Swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
+	// Web Socket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
 	// OAuth2
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
@@ -52,6 +55,17 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 
+	// STOMP & SockJS
+	implementation 'org.webjars:sockjs-client:1.1.2'
+	implementation 'org.webjars:stomp-websocket:2.3.3'
+
+	// JWT. 겹치면 제거
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+
+	// apache commons lang
+	implementation 'org.apache.commons:commons-lang3:3.12.0'
 }
 
 test {
