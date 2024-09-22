@@ -35,5 +35,10 @@ public class User {
     private Social provider;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Member> member;
+    private Member member;
+
+    public String changeUserName(String newName) {
+        this.name = newName;
+        return this.name;
+    }
 }
