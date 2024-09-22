@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -19,9 +20,12 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID projectId;
 
+    @Column(length = 6, nullable = false, unique = true)
+    private String code;
+
     @Column(length = 50, nullable = false)
     private String name;
 
-    @OneToOne(mappedBy = "project", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private Member member;
+    @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Member> member;
 }

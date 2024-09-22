@@ -1,6 +1,6 @@
 package com.recnsa.cntime.controller;
 
-import com.recnsa.cntime.dto.ProjectIdDTO;
+import com.recnsa.cntime.dto.ProjectCodeDTO;
 import com.recnsa.cntime.dto.ProjectNameDTO;
 import com.recnsa.cntime.global.common.SuccessResponse;
 import com.recnsa.cntime.service.ProjectService;
@@ -16,7 +16,7 @@ public class ProjectController {
 
     @PostMapping()
     public ResponseEntity<SuccessResponse<?>> makeNewProject(@RequestHeader("Authorization") String jwtToken, @RequestBody ProjectNameDTO projectNameDTO) {
-        ProjectIdDTO project = projectService.makeNewProject(jwtToken, projectNameDTO);
+        ProjectCodeDTO project = projectService.makeNewProject(jwtToken, projectNameDTO);
 
         return SuccessResponse.ok(project);
     }

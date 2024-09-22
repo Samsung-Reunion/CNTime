@@ -20,12 +20,12 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID memberId;
 
-    @OneToOne
-    @JoinColumn(name="user_id")
+    @ManyToOne
+    @JoinColumn(name="user_id", nullable = false)
     private User user;
 
-    @OneToOne
-    @JoinColumn(name="project_id")
+    @ManyToOne
+    @JoinColumn(name="project_id", nullable = false)
     private Project project;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)

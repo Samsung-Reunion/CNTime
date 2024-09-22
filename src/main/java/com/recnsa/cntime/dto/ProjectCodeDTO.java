@@ -9,6 +9,6 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectIdDTO {
-    private UUID projectId;
+public class ProjectCodeDTO {
+    private String projectCode;
 }
