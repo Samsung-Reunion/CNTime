@@ -25,17 +25,17 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                .authorizeRequests(authorizeRequests ->
-                        authorizeRequests
-                                .requestMatchers("/","/error", "/swagger-ui/**", "/signIn", "/login/oauth2/**").permitAll()
-                                .anyRequest().authenticated()
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        .requestMatchers(
+                                "/","/error", "/swagger-ui/**", "/signIn", "/login/oauth2/**", "/**"
+                        ).permitAll()
+                        .anyRequest().authenticated()
                 )
                 .cors(withDefaults())
-                .csrf(csrf -> csrf.disable())
-        .oauth2Login(oauth2Login ->
-                oauth2Login
+                .oauth2Login(oauth2Login -> oauth2Login
                         .loginPage("/oauth2/authorization/google")
-        )
+                )
                 .addFilterAfter(new JwtValidationFilter(objectMapper), SecurityContextHolderFilter.class);
 
         return http.build();

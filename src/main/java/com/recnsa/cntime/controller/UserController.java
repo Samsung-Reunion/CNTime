@@ -20,4 +20,9 @@ public class UserController {
 
         return SuccessResponse.ok(userName);
     }
+
+    @GetMapping("/test")
+    public ResponseEntity<SuccessResponse<?>> testing(@RequestHeader("Authorization") String jwtToken) {
+        return SuccessResponse.ok(jwtToken);
+    }
 }
