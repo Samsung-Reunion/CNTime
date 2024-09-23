@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.recnsa.cntime.service.OAuth2Service.extractUserId;
+import static com.recnsa.cntime.service.OAuth2Service.getOnlyToken;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -26,13 +29,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     public UserNameDTO changeUserName(String jwtToken, UserNameDTO userNameDTO) {
-        SecretKey secretKeyObject = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
-
-        System.out.println(jwtToken);
-        String stringUserId = Jwts.parser().verifyWith(secretKeyObject).build().parseSignedClaims(jwtToken).getPayload().get("name", String.class);
-        UUID userId = UUID.fromString(stringUserId);
-
-        System.out.println("userID is " + userId);
+        UUID userId = extractUserId(getOnlyToken(jwtToken));
 
         List<User> all = userRepository.findAll();
         for(User user:all) System.out.println(user.getUserId());
