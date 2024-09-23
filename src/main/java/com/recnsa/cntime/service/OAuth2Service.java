@@ -158,4 +158,14 @@ public class OAuth2Service {
         SecretKey validateSecretKey = new SecretKeySpec(staticSecretKey.getBytes(StandardCharsets.UTF_8) , Jwts.SIG.HS256.key().build().getAlgorithm());
         return Jwts.parser().verifyWith(validateSecretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
+
+    public static String getOnlyToken(String token) {
+        return token.split(" ")[1];
+    }
+
+    public static UUID extractUserId(String token) {
+        SecretKey noStringSecret = new SecretKeySpec(staticSecretKey.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
+        String userIdString = Jwts.parser().verifyWith(noStringSecret).build().parseSignedClaims(token).getPayload().get("userId", String.class);
+        return UUID.fromString(userIdString);
+    }
 }

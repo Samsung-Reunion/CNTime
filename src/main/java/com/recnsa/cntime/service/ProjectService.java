@@ -25,6 +25,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.recnsa.cntime.service.OAuth2Service.extractUserId;
+import static com.recnsa.cntime.service.OAuth2Service.getOnlyToken;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -37,9 +40,7 @@ public class ProjectService {
     private final MemberRepository memberRepository;
 
     public ProjectCodeDTO makeNewProject(String jwtToken, ProjectNameDTO projectNameDTO) {
-        SecretKey secretKeyObject = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
-        String stringUserId = Jwts.parser().verifyWith(secretKeyObject).build().parseSignedClaims(jwtToken).getPayload().get("name", String.class);
-        UUID userId = UUID.fromString(stringUserId);
+        UUID userId = extractUserId(getOnlyToken(jwtToken));
 
         Optional<User> safeUser = userRepository.findById(userId);
         if(safeUser.isEmpty()) throw new EntityNotFoundException();
@@ -76,9 +77,7 @@ public class ProjectService {
     }
 
     public MemberIdDTO makeNewMember(ProjectCodeDTO projectCode, String jwtToken) {
-        SecretKey secretKeyObject = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
-        String stringUserId = Jwts.parser().verifyWith(secretKeyObject).build().parseSignedClaims(jwtToken).getPayload().get("name", String.class);
-        UUID userId = UUID.fromString(stringUserId);
+        UUID userId = extractUserId(getOnlyToken(jwtToken));
 
         Optional<User> safeUser = userRepository.findById(userId);
         Optional<Project> safeProject = projectRepository.findByCode(projectCode.getProjectCode());
