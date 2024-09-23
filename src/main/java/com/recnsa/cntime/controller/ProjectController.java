@@ -20,4 +20,11 @@ public class ProjectController {
 
         return SuccessResponse.ok(project);
     }
+
+    @PutMapping("/member")
+    public ResponseEntity<SuccessResponse<?>> joinMemberToProject(@RequestHeader("Authorization") String jwtToken, @RequestBody ProjectCodeDTO projectCodeDTO) {
+        ProjectCodeDTO project = projectService.joinMemberToProject(jwtToken, projectCodeDTO);
+
+        return SuccessResponse.ok(project);
+    }
 }
