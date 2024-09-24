@@ -1,7 +1,8 @@
 package com.recnsa.cntime.controller;
 
-import com.recnsa.cntime.dto.ProjectCodeDTO;
-import com.recnsa.cntime.dto.ProjectNameDTO;
+import com.recnsa.cntime.dto.project.ProjectCodeDTO;
+import com.recnsa.cntime.dto.project.ProjectColorDTO;
+import com.recnsa.cntime.dto.project.ProjectNameDTO;
 import com.recnsa.cntime.global.common.SuccessResponse;
 import com.recnsa.cntime.service.ProjectService;
 import lombok.AllArgsConstructor;
@@ -21,10 +22,18 @@ public class ProjectController {
         return SuccessResponse.ok(project);
     }
 
+
     @PutMapping("/member")
     public ResponseEntity<SuccessResponse<?>> joinMemberToProject(@RequestHeader("Authorization") String jwtToken, @RequestBody ProjectCodeDTO projectCodeDTO) {
         ProjectCodeDTO project = projectService.joinMemberToProject(jwtToken, projectCodeDTO);
 
         return SuccessResponse.ok(project);
+
+    @PutMapping("/color")
+    public ResponseEntity<SuccessResponse<?>> setProjectColor(@RequestHeader("Authorization") String jwtToken, @RequestBody ProjectColorDTO projectColorDTO) {
+        ProjectColorDTO color = projectService.setProjectColor(jwtToken, projectColorDTO);
+
+        return SuccessResponse.ok(color);
+
     }
 }
