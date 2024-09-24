@@ -28,6 +28,7 @@ public class ProjectController {
         ProjectCodeDTO project = projectService.joinMemberToProject(jwtToken, projectCodeDTO);
 
         return SuccessResponse.ok(project);
+    }
 
     @PutMapping("/color")
     public ResponseEntity<SuccessResponse<?>> setProjectColor(@RequestHeader("Authorization") String jwtToken, @RequestBody ProjectColorDTO projectColorDTO) {

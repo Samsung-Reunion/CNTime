@@ -95,14 +95,15 @@ public class ProjectService {
     public ProjectCodeDTO joinMemberToProject(String jwtToken, ProjectCodeDTO projectCodeDTO) {
         UUID userId = extractUserId(getOnlyToken(jwtToken));
         System.out.println(userId);
-        Optional<User> safeUser = userRepository.findById(userId);;
+        Optional<User> safeUser = userRepository.findById(userId);
+        ;
         Optional<Project> safeProject = projectRepository.findByCode(projectCodeDTO.getProjectCode());
 
         System.out.println("user is + " + safeUser.isEmpty());
         System.out.println("project is + " + safeProject.isEmpty());
 
 
-        if(safeUser.isEmpty() || safeProject.isEmpty()) throw new EntityNotFoundException();
+        if (safeUser.isEmpty() || safeProject.isEmpty()) throw new EntityNotFoundException();
 
         Member member = memberRepository.save(
                 Member.builder()
@@ -112,6 +113,7 @@ public class ProjectService {
         );
 
         return new ProjectCodeDTO(member.getProject().getCode());
+    }
 
     public ProjectColorDTO setProjectColor(String jwtToken, ProjectColorDTO projectColorDTO) {
         UUID userId = extractUserId(getOnlyToken(jwtToken));
