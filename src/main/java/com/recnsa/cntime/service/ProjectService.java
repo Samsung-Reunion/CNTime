@@ -6,6 +6,7 @@ import com.recnsa.cntime.domain.User;
 import com.recnsa.cntime.dto.MemberIdDTO;
 import com.recnsa.cntime.dto.project.ProjectCodeDTO;
 import com.recnsa.cntime.dto.project.ProjectColorDTO;
+import com.recnsa.cntime.dto.project.ProjectInfoListDTO;
 import com.recnsa.cntime.dto.project.ProjectNameDTO;
 import com.recnsa.cntime.global.error.exception.ConflictException;
 import com.recnsa.cntime.global.error.exception.EntityNotFoundException;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -132,5 +134,14 @@ public class ProjectService {
                 .projectId(savedProject.getProjectId())
                 .color(savedProject.getColor())
                 .build();
+    }
+
+    public ProjectInfoListDTO getAllProjectOfUser(String jwtToken) {
+        UUID userId = extractUserId(getOnlyToken(jwtToken));
+        Optional<User> safeUser = userRepository.findById(userId);
+        if(safeUser.isEmpty()) throw new EntityNotFoundException();
+
+        List<Member> membersByUser = memberRepository.findAllByUser(safeUser.get());
+        return null;
     }
 }
