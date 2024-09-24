@@ -28,4 +28,17 @@ public class Project {
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Member> member;
+
+    @Column(length = 7)
+    private String color;
+
+    public String changeProjectName(String name) {
+        this.name = name;
+        return this.name;
+    }
+
+    public String changeProjectColor(String color) {
+        this.color = color;
+        return this.color;
+    }
 }

@@ -1,4 +1,4 @@
-package com.recnsa.cntime.dto;
+package com.recnsa.cntime.dto.project;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
