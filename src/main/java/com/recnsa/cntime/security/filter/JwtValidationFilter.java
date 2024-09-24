@@ -9,9 +9,17 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 public class JwtValidationFilter extends OncePerRequestFilter {
@@ -43,6 +51,13 @@ public class JwtValidationFilter extends OncePerRequestFilter {
             throw new UnauthorizedTokenException("Token is expired");
         }
 
+        String userId = OAuth2Service.extractUserId(token).toString();
+
+        UserDetails userDetails = User.withUsername(userId).password("").authorities(Collections.emptyList()).build();
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
         filterChain.doFilter(request, response);
+
     }
 }

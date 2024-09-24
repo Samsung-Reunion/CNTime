@@ -28,14 +28,11 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers(
-                                "/","/error", "/swagger-ui/**", "/signIn", "/login/oauth2/**", "/**"
+                                "/","/error", "/swagger-ui/**", "/signIn", "/login/oauth2/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .cors(withDefaults())
-                .oauth2Login(oauth2Login -> oauth2Login
-                        .loginPage("/oauth2/authorization/google")
-                )
                 .addFilterAfter(new JwtValidationFilter(objectMapper), SecurityContextHolderFilter.class);
 
         return http.build();
