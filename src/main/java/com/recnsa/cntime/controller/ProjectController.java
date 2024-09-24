@@ -37,4 +37,9 @@ public class ProjectController {
         return SuccessResponse.ok(color);
 
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<SuccessResponse<?>> getAllProjectOfUser(@RequestHeader("Authorization") String jwtToken) {
+
+    }
 }
