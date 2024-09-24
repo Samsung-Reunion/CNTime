@@ -4,10 +4,7 @@ import com.recnsa.cntime.domain.Member;
 import com.recnsa.cntime.domain.Project;
 import com.recnsa.cntime.domain.User;
 import com.recnsa.cntime.dto.MemberIdDTO;
-import com.recnsa.cntime.dto.project.ProjectCodeDTO;
-import com.recnsa.cntime.dto.project.ProjectColorDTO;
-import com.recnsa.cntime.dto.project.ProjectInfoListDTO;
-import com.recnsa.cntime.dto.project.ProjectNameDTO;
+import com.recnsa.cntime.dto.project.*;
 import com.recnsa.cntime.global.error.exception.ConflictException;
 import com.recnsa.cntime.global.error.exception.EntityNotFoundException;
 import com.recnsa.cntime.global.error.exception.UnauthorizedException;
@@ -24,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.recnsa.cntime.service.OAuth2Service.extractUserId;
 import static com.recnsa.cntime.service.OAuth2Service.getOnlyToken;
@@ -142,6 +140,20 @@ public class ProjectService {
         if(safeUser.isEmpty()) throw new EntityNotFoundException();
 
         List<Member> membersByUser = memberRepository.findAllByUser(safeUser.get());
-        return null;
+
+        // member -> project -> projectInfoDTO
+        List<ProjectInfoDTO> projectInfos = membersByUser.stream()
+                .map(member -> projectRepository.findById(member.getProject().getProjectId())
+                        .map(project -> ProjectInfoDTO.builder()
+                                .projectId(project.getProjectId())
+                                .projectName(project.getName())
+                                .numberOfMember((long) project.getMember().size())
+                                .color(project.getColor())
+                                .build())
+                        .orElseThrow(ConflictException::new)
+                )
+                .collect(Collectors.toList());
+
+        return new ProjectInfoListDTO(projectInfos);
     }
 }

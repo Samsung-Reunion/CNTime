@@ -42,6 +42,6 @@ public class ProjectController {
     @GetMapping("/all")
     public ResponseEntity<SuccessResponse<?>> getAllProjectOfUser(@RequestHeader("Authorization") String jwtToken) {
         ProjectInfoListDTO projectInfoListDTO = projectService.getAllProjectOfUser(jwtToken);
-        return null;
+        return SuccessResponse.ok(projectInfoListDTO);
     }
 }
