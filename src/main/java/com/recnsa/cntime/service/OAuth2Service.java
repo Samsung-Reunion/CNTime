@@ -160,7 +160,7 @@ public class OAuth2Service {
     }
 
     public static String getOnlyToken(String token) {
-        return token.split(" ")[1];
+        return token;
     }
 
     public static UUID extractUserId(String token) {
