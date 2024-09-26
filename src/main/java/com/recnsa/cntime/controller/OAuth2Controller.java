@@ -14,7 +14,7 @@ public class OAuth2Controller {
     private final OAuth2Service authservice;
 
     @PostMapping("/signIn")
-    public ResponseEntity<SuccessResponse<?>> googleSignIn(@RequestParam String code) {
+    public ResponseEntity<SuccessResponse<?>> googleSignIn(@RequestParam String code, @RequestParam String provider) {
         SignInDTO signInDTO = authservice.authenticateWithGoogle(code);
         return SuccessResponse.ok(signInDTO);
     }
