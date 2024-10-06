@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers(
-                                "/","/error", "/swagger-ui/**", "/signIn", "/login/oauth2/**"
+                                "/","/error", "/swagger-ui/**", "/signIn", "/login/oauth2/**", "/signIn/api"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -52,7 +52,7 @@ public class SecurityConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // 모든 경로에 대해 CORS 설정
                         .allowedOrigins("http://localhost:3000", "https://ppomoppomo.netlify.app") // 허용할 출처 설정
-                        .allowedMethods("GET", "POST", "PUT", "DELETE") // 허용할 HTTP 메소드 설정
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP 메소드 설정
                         .allowedHeaders("*") // 허용할 헤더 설정
                         .allowCredentials(true); // 쿠키와 함께 요청 허용
             }

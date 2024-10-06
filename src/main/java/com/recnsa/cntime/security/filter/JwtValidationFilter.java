@@ -32,7 +32,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, UnauthorizedTokenException, IOException {
 
-        if (request.getRequestURI().equals("/") || request.getRequestURI().equals("/signIn") || request.getRequestURI().equals("/login/oauth2/**") || request.getRequestURI().equals("/swagger-ui/**")) {
+        if (request.getRequestURI().equals("/") || request.getRequestURI().equals("/signIn") || request.getRequestURI().equals("/login/oauth2/**") || request.getRequestURI().equals("/swagger-ui/**") || request.getRequestURI().equals("/signIn/api")) {
             filterChain.doFilter(request, response);
             return;
         }
