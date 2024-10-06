@@ -2,6 +2,7 @@ package com.recnsa.cntime.controller;
 
 import com.recnsa.cntime.dto.project.ProjectCodeDTO;
 import com.recnsa.cntime.dto.project.ProjectColorDTO;
+import com.recnsa.cntime.dto.project.ProjectInfoListDTO;
 import com.recnsa.cntime.dto.project.ProjectNameDTO;
 import com.recnsa.cntime.global.common.SuccessResponse;
 import com.recnsa.cntime.service.ProjectService;
@@ -36,5 +37,11 @@ public class ProjectController {
 
         return SuccessResponse.ok(color);
 
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<SuccessResponse<?>> getAllProjectOfUser(@RequestHeader("Authorization") String jwtToken) {
+        ProjectInfoListDTO projectInfoListDTO = projectService.getAllProjectOfUser(jwtToken);
+        return SuccessResponse.ok(projectInfoListDTO);
     }
 }
