@@ -37,15 +37,10 @@ public class JwtValidationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String bearerToken = request.getHeader("Authorization");
-        if (bearerToken == null) {
+        String token = request.getHeader("Authorization");
+        if (token == null) {
             throw new UnauthorizedTokenException("Token is null");
         }
-
-        if (!bearerToken.startsWith("Bearer ")) {
-            throw new UnauthorizedTokenException("Token is invalid");
-        }
-        String token = bearerToken.split(" ")[1];
 
         if (OAuth2Service.isTokenExpired(token)) {
             throw new UnauthorizedTokenException("Token is expired");
