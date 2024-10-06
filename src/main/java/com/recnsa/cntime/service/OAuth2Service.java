@@ -80,7 +80,7 @@ public class OAuth2Service {
         params.add("code", decodedCode);
         params.add("client_id", clientId);
         params.add("client_secret", clientSecret);
-        params.add("redirect_uri", redirectUri);
+        params.add("redirect_uri", "http://localhost:3000/oauth/gmail");
         params.add("grant_type", "authorization_code");
 
         Map<String, Object> response;
