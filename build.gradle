@@ -72,6 +72,9 @@ dependencies {
 
 	// apache commons lang
 	implementation 'org.apache.commons:commons-lang3:3.12.0'
+
+	//Jackson
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.0'
 }
 
 test {
