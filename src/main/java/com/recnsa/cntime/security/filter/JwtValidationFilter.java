@@ -37,6 +37,12 @@ public class JwtValidationFilter extends OncePerRequestFilter {
             return;
         }
 
+        if (request.getMethod().equalsIgnoreCase("OPTIONS")) {
+            // OPTIONS 요청은 JWT 인증을 수행하지 않음
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String token = request.getHeader("Authorization");
         if (token == null) {
             throw new UnauthorizedTokenException("Token is null");
