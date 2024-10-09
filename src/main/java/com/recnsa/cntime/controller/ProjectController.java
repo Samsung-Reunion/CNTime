@@ -1,5 +1,6 @@
 package com.recnsa.cntime.controller;
 
+import com.recnsa.cntime.dto.MemberInfoListDTO;
 import com.recnsa.cntime.dto.project.ProjectCodeDTO;
 import com.recnsa.cntime.dto.project.ProjectColorDTO;
 import com.recnsa.cntime.dto.project.ProjectInfoListDTO;
@@ -7,6 +8,7 @@ import com.recnsa.cntime.dto.project.ProjectNameDTO;
 import com.recnsa.cntime.global.common.SuccessResponse;
 import com.recnsa.cntime.service.ProjectService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +31,13 @@ public class ProjectController {
         ProjectCodeDTO project = projectService.joinMemberToProject(jwtToken, projectCodeDTO);
 
         return SuccessResponse.ok(project);
+    }
+
+    @GetMapping("/member/all")
+    public ResponseEntity<SuccessResponse<?>> getAllMemberOfProject(@RequestHeader("Authorization") String jwtToken, @Param("projectCode") String projectCode) {
+        MemberInfoListDTO memberInfoListDTO = projectService.getAllMemberOfProject(jwtToken, projectCode);
+
+        return SuccessResponse.ok(memberInfoListDTO);
     }
 
     @PutMapping("/color")
