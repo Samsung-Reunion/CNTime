@@ -8,4 +8,5 @@ import java.util.UUID;
 
 public interface ProjectRepository extends JpaRepository<Project, UUID> {
     public Optional<Project> findByCode(String code);
+    boolean existsByCode(String code);
 }

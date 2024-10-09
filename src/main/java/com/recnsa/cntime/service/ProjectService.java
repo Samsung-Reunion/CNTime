@@ -46,26 +46,27 @@ public class ProjectService {
         boolean isExist = true;
         int faultCnt = 0;
         Project project = null;
-        while(isExist) {
-            try {
-                String randomCode = RandomStringUtils.randomAlphanumeric(6);
+        String randomCode = null;
 
-                project = projectRepository.save(
-                        Project.builder()
-                                .name(projectNameDTO.getProjectName())
-                                .code(randomCode)
-                                .build()
-                );
-                isExist = false;
-            }
-            catch (DataIntegrityViolationException e) {
+        while(faultCnt<5 && isExist) {
+            randomCode = RandomStringUtils.randomAlphanumeric(6);
+
+            if(projectRepository.existsByCode(randomCode)) {
                 faultCnt++;
-
-                if(faultCnt>4) {
-                    throw new ConflictException();
-                }
+                continue;
             }
+
+            isExist=false;
         }
+
+        if(isExist) throw new ConflictException();
+
+        project = projectRepository.save(
+                Project.builder()
+                        .name(projectNameDTO.getProjectName())
+                        .code(randomCode)
+                        .build()
+        );
 
         ProjectCodeDTO retProjectCode = new ProjectCodeDTO(project.getCode());
 
