@@ -64,7 +64,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:3000", "https://ppomoppomo.nestify.app")); // 허용할 출처 설정
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 허용할 HTTP 메서드 설정
-        configuration.setAllowedHeaders(List.of("*")); // 허용할 헤더 설정
+        configuration.setAllowedHeaders(List.of("Authorization", "*")); // 허용할 헤더 설정
         configuration.setAllowCredentials(true); // 쿠키 등 인증 정보 허용
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
