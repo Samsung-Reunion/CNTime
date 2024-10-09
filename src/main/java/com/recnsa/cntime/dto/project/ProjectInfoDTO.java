@@ -15,5 +15,6 @@ public class ProjectInfoDTO {
     private UUID projectId;
     private String projectName;
     private Long numberOfMember;
+    private String code;
     private String color;
 }

@@ -38,7 +38,7 @@ public class ProjectService {
     private final MemberRepository memberRepository;
 
     public ProjectCodeDTO makeNewProject(String jwtToken, ProjectNameDTO projectNameDTO) {
-        UUID userId = extractUserId(getOnlyToken(jwtToken));
+        UUID userId = extractUserId(jwtToken);
 
         Optional<User> safeUser = userRepository.findById(userId);
         if(safeUser.isEmpty()) throw new EntityNotFoundException();
@@ -148,6 +148,7 @@ public class ProjectService {
                                 .projectId(project.getProjectId())
                                 .projectName(project.getName())
                                 .numberOfMember((long) project.getMember().size())
+                                .code(project.getCode())
                                 .color(project.getColor())
                                 .build())
                         .orElseThrow(ConflictException::new)
