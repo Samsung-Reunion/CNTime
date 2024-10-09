@@ -11,4 +11,5 @@ import java.util.UUID;
 public interface MemberRepository extends JpaRepository<Member, UUID> {
     boolean existsByProjectAndUser(Project project, User user);
     List<Member> findAllByUser(User user);
+    List<Member> findAllByProject(Project project);
 }
