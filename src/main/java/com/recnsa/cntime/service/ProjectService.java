@@ -8,6 +8,7 @@ import com.recnsa.cntime.global.error.exception.ConflictException;
 import com.recnsa.cntime.global.error.exception.EntityNotFoundException;
 import com.recnsa.cntime.repository.MemberRepository;
 import com.recnsa.cntime.repository.ProjectRepository;
+import com.recnsa.cntime.repository.TaskRepository;
 import com.recnsa.cntime.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,6 +34,7 @@ public class ProjectService {
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
+    private final TaskRepository taskRepository;
 
     public ProjectCodeDTO makeNewProject(String jwtToken, ProjectNameDTO projectNameDTO) {
         UUID userId = extractUserId(getOnlyToken(jwtToken));
@@ -93,17 +96,30 @@ public class ProjectService {
 
         if(safeProject.isEmpty()) throw new EntityNotFoundException();
 
-        return new ProjectInfoDTO(
-                safeProject.get().getProjectId().toString(),
-                safeProject.get().getName(),
-                safeProject.get().getMember().stream()
-                        .map(member -> new ProjectMemberDTO(
-                                member.getUser().getUserId().toString(),
-                                member.getUser().getName(),
-                                0
-                        ))
-                        .toArray(ProjectMemberDTO[]::new)
-        );
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfDay = now.toLocalDate().atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.plusDays(1);
 
+        Project project = safeProject.get();
+        ProjectMemberDTO[] members = project.getMember().stream()
+                .map(member -> {
+                    Long totalMinutes = taskRepository.findSumWorkingMinutesForToday(
+                            member.getMemberId(), startOfDay, endOfDay
+                    );
+                    long totalSeconds = (totalMinutes == null ? 0 : totalMinutes * 60);
+
+                    return new ProjectMemberDTO(
+                            member.getUser().getUserId().toString(),
+                            member.getUser().getName(),
+                            totalSeconds
+                    );
+                })
+                .toArray(ProjectMemberDTO[]::new);
+
+        return new ProjectInfoDTO(
+                project.getProjectId().toString(),
+                project.getName(),
+                members
+        );
     }
 }
