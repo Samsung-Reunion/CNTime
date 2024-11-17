@@ -1,17 +1,25 @@
 package com.recnsa.cntime.controller;
 
+import com.recnsa.cntime.dto.ProjectInfoDTO;
+import com.recnsa.cntime.service.ProjectService;
+import lombok.AllArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
+@AllArgsConstructor
 public class WebSocketController {
+    private final ProjectService projectService;
 
     @MessageMapping("/enterProject")
-    @SendTo("/ws/projectInfo")
-    public Map<String, Object> handleEnterProject(Map<String, Object> request) {
-        // 클라이언트에서 보낸 데이터를 그대로 반환
-        return request;
+    @SendTo("/app/projectInfo")
+    public ProjectInfoDTO handleEnterProject(Map<String, Object> request) {
+        UUID projectId = UUID.fromString(request.get("project_id").toString());
+
+        return projectService.getProjectInfo(projectId);
     }
+
 }
