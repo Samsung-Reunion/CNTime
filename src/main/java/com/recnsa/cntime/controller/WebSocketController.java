@@ -9,8 +9,9 @@ import java.util.Map;
 public class WebSocketController {
 
     @MessageMapping("/enterProject")
-    @SendTo("/ws/projectInfo")
+    @SendTo("/app/projectInfo")
     public Map<String, Object> handleEnterProject(Map<String, Object> request) {
+        System.out.println("socket received");
         // 클라이언트에서 보낸 데이터를 그대로 반환
         return request;
     }
