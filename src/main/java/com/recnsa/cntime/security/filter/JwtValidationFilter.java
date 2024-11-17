@@ -29,6 +29,13 @@ public class JwtValidationFilter extends OncePerRequestFilter {
             return;
         }
 
+        System.out.println(request.getRequestURI());
+        String requestURI = request.getRequestURI();
+        if (requestURI.startsWith("/ws/") || requestURI.startsWith("/websocket/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken == null) {
             throw new UnauthorizedTokenException("Token is null");

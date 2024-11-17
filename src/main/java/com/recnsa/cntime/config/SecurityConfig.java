@@ -28,7 +28,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers(
-                                "/","/error", "/swagger-ui/**", "/signIn", "/login/oauth2/**", "/**"
+                                "/","/error", "/swagger-ui/**", "/signIn", "/login/oauth2/**", "/**", "/websocket/**", "/ws/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
