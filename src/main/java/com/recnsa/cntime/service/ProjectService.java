@@ -3,15 +3,12 @@ package com.recnsa.cntime.service;
 import com.recnsa.cntime.domain.Member;
 import com.recnsa.cntime.domain.Project;
 import com.recnsa.cntime.domain.User;
-import com.recnsa.cntime.dto.MemberIdDTO;
-import com.recnsa.cntime.dto.ProjectCodeDTO;
-import com.recnsa.cntime.dto.ProjectNameDTO;
+import com.recnsa.cntime.dto.*;
 import com.recnsa.cntime.global.error.exception.ConflictException;
 import com.recnsa.cntime.global.error.exception.EntityNotFoundException;
 import com.recnsa.cntime.repository.MemberRepository;
 import com.recnsa.cntime.repository.ProjectRepository;
 import com.recnsa.cntime.repository.UserRepository;
-import io.jsonwebtoken.Jwts;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -19,9 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -92,5 +86,24 @@ public class ProjectService {
         );
 
         return new MemberIdDTO(member.getMemberId());
+    }
+
+    public ProjectInfoDTO getProjectInfo(UUID projectId) {
+        Optional<Project> safeProject = projectRepository.findByProjectId(projectId);
+
+        if(safeProject.isEmpty()) throw new EntityNotFoundException();
+
+        return new ProjectInfoDTO(
+                safeProject.get().getProjectId().toString(),
+                safeProject.get().getName(),
+                safeProject.get().getMember().stream()
+                        .map(member -> new ProjectMemberDTO(
+                                member.getUser().getUserId().toString(),
+                                member.getUser().getName(),
+                                0
+                        ))
+                        .toArray(ProjectMemberDTO[]::new)
+        );
+
     }
 }
