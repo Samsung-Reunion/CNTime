@@ -19,16 +19,14 @@ public class WebSocketController {
     @MessageMapping("/enterProject")
     @SendTo("/app/projectInfo")
     public ProjectInfoDTO handleEnterProject(Map<String, Object> request) {
-        System.out.println(request.get("project_id"));
         UUID projectId = UUID.fromString(request.get("project_id").toString());
 
-        // test를 위해 memberId 받음, JWT에서 추출되는 코드 추가되면 삭제
-        UUID memberId = UUID.fromString(request.get("member_id").toString());
+        // test를 위해 userid 받음, JWT에서 추출되는 코드 추가되면 삭제
+        UUID userId = UUID.fromString(request.get("user_id").toString());
 
-        sessionService.setMemberOnline(projectId, memberId, true);
+        sessionService.setMemberOnline(projectId, userId, true);
 
-        // 해당 유저가 project에 소속되어있는지 검증하고, 소속되어있지 않다면 null을 리턴
-        // 소속되어있으면 정보 반환
+        // TODO: 해당 유저가 project에 소속되어있는지 검증하고, 소속되어있지 않다면 에러 리턴
 
         return projectService.getProjectInfo(projectId);
     }
