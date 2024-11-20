@@ -16,7 +16,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class StatusBroadcastService {
 
-    private final ProjectService projectService;
     private final SessionService sessionService;
     private final SimpMessagingTemplate messagingTemplate;
 
@@ -25,10 +24,8 @@ public class StatusBroadcastService {
     public void broadcastProjectStatus() {
         List<UUID> activeProjects = sessionService.getActiveProjects();
 
-        System.out.println("run1");
 
         for (UUID projectId : activeProjects) {
-            System.out.println("run2");
             List<MemberStatusDTO> memberStatuses = sessionService.getMemberStatuses(projectId);
             messagingTemplate.convertAndSend("/room/status/" + projectId.toString(), memberStatuses);
         }

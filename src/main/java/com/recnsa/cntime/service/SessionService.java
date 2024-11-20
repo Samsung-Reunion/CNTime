@@ -10,11 +10,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SessionService {
     private final Map<UUID, Map<UUID, MemberStatusDTO>> sessionData = new ConcurrentHashMap<>();
 
-    public void setMemberOnline(UUID projectId, UUID memberId, boolean isOnline) {
+    public void setMemberOnline(UUID projectId, UUID userId, boolean isOnline) {
         sessionData.computeIfAbsent(projectId, id -> new ConcurrentHashMap<>())
-                .compute(memberId, (id, status) -> {
+                .compute(userId, (id, status) -> {
                     if (status == null) {
-                        return new MemberStatusDTO(memberId, isOnline, 0);
+                        return new MemberStatusDTO(userId, isOnline, 0);
                     } else {
                         status.setConnected(isOnline);
                         if (!isOnline) {
