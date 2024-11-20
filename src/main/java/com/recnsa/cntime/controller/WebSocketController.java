@@ -17,6 +17,7 @@ public class WebSocketController {
     @MessageMapping("/enterProject")
     @SendTo("/app/projectInfo")
     public ProjectInfoDTO handleEnterProject(Map<String, Object> request) {
+        System.out.println(request.get("project_id"));
         UUID projectId = UUID.fromString(request.get("project_id").toString());
 
         return projectService.getProjectInfo(projectId);

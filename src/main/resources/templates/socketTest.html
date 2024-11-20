@@ -10,8 +10,8 @@
 <body>
 <h1>WebSocket Test</h1>
 <div>
-    <label for="projectName">Project Name:</label>
-    <input type="text" id="projectName" placeholder="Enter project name">
+    <label for="projectId">Project ID:</label>
+    <input type="text" id="projectId" placeholder="Enter project ID">
 </div>
 <button id="sendMessage">Send Message</button>
 <div>
@@ -37,12 +37,16 @@
         // 버튼 클릭 이벤트 핸들러
         document.getElementById('sendMessage').addEventListener('click', () => {
             console.log('sending...');
-            const projectName = document.getElementById('projectName').value;
+            const projectId = document.getElementById('projectId').value;
 
-            // 서버로 메시지 전송
+            if (!projectId) {
+                alert('Project ID를 입력해주세요!');
+                return;
+            }
+
+            // 서버로 메시지 전송 (project_id 형식으로)
             stompClient.send('/ws/enterProject', {}, JSON.stringify({
-                projectName: projectName,
-                timestamp: new Date().toISOString()
+                project_id: projectId // 입력받은 Project ID를 JSON에 추가
             }));
         });
     });
