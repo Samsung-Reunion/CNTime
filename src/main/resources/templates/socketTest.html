@@ -3,57 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSocket Test</title>
+    <title>WebSocket JWT</title>
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
 </head>
 <body>
-<h1>WebSocket Test</h1>
+<h1>WebSocket JWT Test</h1>
 <div>
-    <label for="projectId">Project ID:</label>
-    <input type="text" id="projectId" placeholder="Enter project ID">
+    <label for="jwtToken">JWT Token:</label>
+    <input type="text" id="jwtToken" placeholder="Enter JWT Token">
 </div>
-<button id="sendMessage">Send Message</button>
+<button id="connectBtn">Connect</button>
 <div>
-    <h3>Response:</h3>
-    <pre id="response"></pre>
+    <h3>Status:</h3>
+    <pre id="status"></pre>
 </div>
 
 <script>
-    // WebSocket 연결 설정
-    const socket = new SockJS('http://localhost:8081/websocket'); // 서버 엔드포인트
-    const stompClient = Stomp.over(socket);
+    let stompClient;
 
-    // 서버와 연결
-    stompClient.connect({}, (frame) => {
-        console.log('Connected: ' + frame);
+    document.getElementById('connectBtn').addEventListener('click', () => {
+        const jwtToken = document.getElementById('jwtToken').value;
 
-        // 서버에서 오는 메시지를 구독
-        stompClient.subscribe('/app/projectInfo', (message) => {
-            console.log('Received: ', message.body);
-            document.getElementById('response').textContent = JSON.stringify(JSON.parse(message.body), null, 2);
-        });
+        if (!jwtToken) {
+            alert('Please enter a JWT token!');
+            return;
+        }
 
-        // 버튼 클릭 이벤트 핸들러
-        document.getElementById('sendMessage').addEventListener('click', () => {
-            console.log('sending...');
-            const projectId = document.getElementById('projectId').value;
+        // WebSocket 연결 설정
+        const socket = new SockJS('http://localhost:8081/websocket');
+        stompClient = Stomp.over(socket);
 
-            if (!projectId) {
-                alert('Project ID를 입력해주세요!');
-                return;
+        // 서버와 연결 (헤더에 JWT 토큰 포함)
+        stompClient.connect(
+            { Authorization: `Bearer ${jwtToken}` }, // JWT 토큰을 헤더에 추가
+            (frame) => {
+                console.log('Connected: ' + frame);
+                document.getElementById('status').textContent = 'Connected to WebSocket server!';
+            },
+            (error) => {
+                console.error('Connection error: ', error);
+                document.getElementById('status').textContent = 'Connection failed!';
             }
-
-            // 서버로 메시지 전송 (project_id 형식으로)
-            stompClient.send('/ws/enterProject', {}, JSON.stringify({
-                project_id: projectId // 입력받은 Project ID를 JSON에 추가
-            }));
-        });
+        );
     });
-
-    // 오류 및 연결 종료 처리
-    socket.onclose = () => console.log('WebSocket connection closed.');
-    socket.onerror = (error) => console.error('WebSocket error: ', error);
 </script>
 </body>
 </html>

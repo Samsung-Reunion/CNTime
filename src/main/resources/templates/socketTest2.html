@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+</head>
+<body>
+<h1>WebSocket Test</h1>
+<div>
+    <label for="projectId">Project ID:</label>
+    <input type="text" id="projectId" placeholder="Enter project ID">
+</div>
+<div>
+    <label for="memberId">Member ID:</label>
+    <input type="text" id="memberId" placeholder="Enter member ID">
+</div>
+<button id="sendMessage">Send Message</button>
+<div>
+    <h3>Response:</h3>
+    <pre id="response"></pre>
+</div>
+
+<script>
+    // WebSocket 연결 설정
+    const socket = new SockJS('http://localhost:8081/websocket'); // 서버 엔드포인트
+    const stompClient = Stomp.over(socket);
+
+    // 서버와 연결
+    stompClient.connect({}, (frame) => {
+        console.log('Connected: ' + frame);
+
+        // 버튼 클릭 이벤트 핸들러
+        document.getElementById('sendMessage').addEventListener('click', () => {
+            const projectId = document.getElementById('projectId').value;
+            const memberId = document.getElementById('memberId').value;
+
+            if (!projectId || !memberId) {
+                alert('Project ID와 Member ID를 모두 입력해주세요!');
+                return;
+            }
+
+            // 서버에서 오는 프로젝트 정보 구독
+            stompClient.subscribe('/app/projectInfo', (message) => {
+                console.log('Project Info:', JSON.parse(message.body));
+                document.getElementById('response').textContent = JSON.stringify(JSON.parse(message.body), null, 2);
+            });
+
+            // 서버에서 특정 프로젝트 멤버 상태 정보 구독
+            stompClient.subscribe(`/room/status/${projectId}`, (message) => {
+                console.log('Member Status Updates:', JSON.parse(message.body));
+            });
+
+            // 서버로 메시지 전송
+            stompClient.send('/ws/enterProject', {}, JSON.stringify({
+                project_id: projectId, // Project ID
+                member_id: memberId   // Member ID
+            }));
+
+            console.log('Message sent to /ws/enterProject');
+        });
+    });
+
+    // 오류 및 연결 종료 처리
+    socket.onclose = () => console.log('WebSocket connection closed.');
+    socket.onerror = (error) => console.error('WebSocket error: ', error);
+</script>
+</body>
+</html>
