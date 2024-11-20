@@ -27,6 +27,9 @@ public class WebSocketController {
 
         sessionService.setMemberOnline(projectId, memberId, true);
 
+        // 해당 유저가 project에 소속되어있는지 검증하고, 소속되어있지 않다면 null을 리턴
+        // 소속되어있으면 정보 반환
+
         return projectService.getProjectInfo(projectId);
     }
 }

@@ -27,7 +27,7 @@ public class StatusBroadcastService {
 
         for (UUID projectId : activeProjects) {
             List<MemberStatusDTO> memberStatuses = sessionService.getMemberStatuses(projectId);
-            messagingTemplate.convertAndSend("room/status/" + projectId, memberStatuses);
+            messagingTemplate.convertAndSend("/room/status/" + projectId.toString(), memberStatuses);
         }
     }
 }
