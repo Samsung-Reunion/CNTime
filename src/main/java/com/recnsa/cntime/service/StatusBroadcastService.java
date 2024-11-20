@@ -25,9 +25,12 @@ public class StatusBroadcastService {
     public void broadcastProjectStatus() {
         List<UUID> activeProjects = sessionService.getActiveProjects();
 
+        System.out.println("run1");
+
         for (UUID projectId : activeProjects) {
+            System.out.println("run2");
             List<MemberStatusDTO> memberStatuses = sessionService.getMemberStatuses(projectId);
-            messagingTemplate.convertAndSend("room/status/" + projectId, memberStatuses);
+            messagingTemplate.convertAndSend("/room/status/" + projectId.toString(), memberStatuses);
         }
     }
 }

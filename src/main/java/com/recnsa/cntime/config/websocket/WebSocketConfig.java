@@ -26,7 +26,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/websocket")
                 .setAllowedOriginPatterns("*")
-                .addInterceptors(jwtHandshakeInterceptor) // 빈을 주입받아 사용
+//                .addInterceptors(jwtHandshakeInterceptor) // 빈을 주입받아 사용
                 .withSockJS();
     }
 }
