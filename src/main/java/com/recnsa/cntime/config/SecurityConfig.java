@@ -1,16 +1,11 @@
 package com.recnsa.cntime.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recnsa.cntime.security.filter.JwtValidationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
-import org.springframework.security.oauth2.jwt.JwtValidationException;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.context.SecurityContextHolderFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -27,7 +22,6 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private ObjectMapper objectMapper;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -35,13 +29,22 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers(
-                                "/","/error", "/swagger-ui/**", "/signIn", "/login/oauth2/**", "/signIn/api",
-                                "/websocket/**", "/ws/**"
+                                "/",
+                                "/error",
+                                "/swagger-ui/**",
+                                "/signIn",
+                                "/login/oauth2/**",
+                                "/signIn/api",
+                                "/favicon.ico",
+                                "/visitor/submit",
+                                "/example",
+                                "/websocket/**",
+                                "/ws/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .cors(withDefaults())
-                .addFilterAfter(new JwtValidationFilter(objectMapper), SecurityContextHolderFilter.class);
+                .addFilterAfter(new JwtValidationFilter(), SecurityContextHolderFilter.class);
 
         return http.build();
     }

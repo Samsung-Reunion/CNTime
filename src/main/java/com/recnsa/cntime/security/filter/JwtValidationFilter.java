@@ -1,6 +1,5 @@
 package com.recnsa.cntime.security.filter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recnsa.cntime.global.error.exception.UnauthorizedTokenException;
 import com.recnsa.cntime.service.OAuth2Service;
 import jakarta.servlet.FilterChain;
@@ -10,7 +9,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,16 +21,22 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 public class JwtValidationFilter extends OncePerRequestFilter {
-
-    private final ObjectMapper objectMapper;
-
     @Value("${jwt.secret}")
     private String jwtSecretKey;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, UnauthorizedTokenException, IOException {
+        System.out.println("filter in : " + request.getRequestURI());
 
-        if (request.getRequestURI().equals("/") || request.getRequestURI().equals("/signIn") || request.getRequestURI().equals("/login/oauth2/**") || request.getRequestURI().equals("/swagger-ui/**") || request.getRequestURI().equals("/signIn/api")) {
+        if (request.getRequestURI().equals("/") ||
+                request.getRequestURI().equals("/signIn") ||
+                request.getRequestURI().equals("/login/oauth2/**") ||
+                request.getRequestURI().equals("/swagger-ui/**") ||
+                request.getRequestURI().equals("/signIn/api") ||
+                request.getRequestURI().equals("/favicon.ico") ||
+                request.getRequestURI().equals(("/visitor/submit")) ||
+                request.getRequestURI().equals(("/example"))
+        ) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -51,6 +55,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
 
         String token = request.getHeader("Authorization");
         if (token == null) {
+            System.out.println("token require : " + request.getRequestURI());
             throw new UnauthorizedTokenException("Token is null");
         }
 
